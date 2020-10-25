@@ -47,14 +47,24 @@ public class StateCensusAnalyserTest {
 			assertEquals(CensusAnalyserException.ExceptionType.CSV_FILE_INTERNAL_ISSUES, e.type);
 		}
 	}
-	
-	  @Test
-	    public void givenWrongDelimiter_InIndiaCensusData_ShouldThrow_CustomException() {
-	        try {
-	        	StateCensusAnalyser stateCensusAnalyser = new StateCensusAnalyser();
-	            int numOfRecords = stateCensusAnalyser.loadIndiaCensusData(INDIAN_CENSUS_CSV_WRONG_DELIMITER);
-	        } catch (CensusAnalyserException e) {
-	            assertEquals(CensusAnalyserException.ExceptionType.CSV_FILE_INTERNAL_ISSUES, e.type);
-	        }
-	    }
+
+	@Test
+	public void givenWrongDelimiter_InIndiaCensusData_ShouldThrow_CustomException() {
+		try {
+			StateCensusAnalyser stateCensusAnalyser = new StateCensusAnalyser();
+			int numOfRecords = stateCensusAnalyser.loadIndiaCensusData(INDIAN_CENSUS_CSV_WRONG_DELIMITER);
+		} catch (CensusAnalyserException e) {
+			assertEquals(CensusAnalyserException.ExceptionType.CSV_FILE_INTERNAL_ISSUES, e.type);
+		}
+	}
+
+	@Test
+	public void givenMissingHeader_InIndiaCensusData_ShouldThrow_CustomException() {
+		try {
+			StateCensusAnalyser stateCensusAnalyser = new StateCensusAnalyser();
+			int numOfRecords = stateCensusAnalyser.loadIndiaCensusData(INDIAN_CENSUS_CSV_WRONG_DELIMITER);
+		} catch (CensusAnalyserException e) {
+			assertEquals(CensusAnalyserException.ExceptionType.CSV_FILE_INTERNAL_ISSUES, e.type);
+		}
+	}
 }
