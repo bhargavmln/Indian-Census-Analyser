@@ -8,6 +8,7 @@ import org.junit.rules.ExpectedException;
 import com.capg.censusanalyser.CensusAnalyserException;
 import com.capg.censusanalyser.StateCensusAnalyser;
 import com.capg.censusanalyser.StateCensusData;
+import com.capg.jsonutility.Json;
 import com.google.gson.Gson;
 
 public class StateCensusAnalyserTest {
@@ -134,5 +135,15 @@ public class StateCensusAnalyserTest {
 		StateCodeData[] stateCodeCSV = new Gson().fromJson(sortedStateCodeData, StateCodeData[].class);
 		assertEquals("AN", stateCodeCSV[0].getStateCode());
 		assertEquals("WB", stateCodeCSV[stateCodeCSV.length-1].getStateCode());
+	}
+	
+	@Test
+	public void givenStateCodeData_WhenSortedOnPopulation_ShouldReturnSortedResult() throws CensusAnalyserException {
+		String sortedCensusData = stateCensusAnalyser.getPopulationWiseSortedCensusData(STATE_CENSUS_DATA);
+		new Json().writeList("population", sortedCensusData);
+		String readCensuslist = new Json().readList("population.json");
+		StateCensusData[] censusCSV = new Gson().fromJson(sortedCensusData, StateCensusData[].class);
+		StateCensusData[] censusCSVfromFile = new Gson().fromJson(readCensuslist, StateCensusData[].class);
+		assertEquals(censusCSV.length, censusCSVfromFile.length);
 	}
 }
