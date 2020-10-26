@@ -5,17 +5,14 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import com.capg.censusanalyser.CensusAnalyserException;
-import com.capg.censusanalyser.StateCensusAnalyser;
-import com.capg.censusanalyser.StateCensusData;
 import com.capg.jsonutility.Json;
 import com.google.gson.Gson;
 
 public class StateCensusAnalyserTest {
 
-	private static final String STATE_CENSUS_DATA = "./src/test/resources/StateCensusData.csv";
-	private static final String STATE_CODE_DATA = "./src/test/resources/StateCodeData.csv";
-	private static final String CSV_WRONG_DATA = "./src/test/resources/WrongData.csv";
+	private static final String CENSUS_DATA = "./src/test/resources/StateCensusData.csv";
+	private static final String CODE_DATA = "./src/test/resources/StateCodeData.csv";
+	private static final String WRONG_CSV_DATA = "./src/test/resources/WrongData.csv";
 	private static final String WRONG_FILE_PATH = "./src/main/resources/StateCensusData.csv";
 	private static final String INDIAN_CENSUS_CSV_WRONG_DELIMITER = "./src/test/resources/CensusWrongDelimiterData.csv";
 	private static final String INDIAN_CENSUS_CSV_HEADER_MISSING = "./src/test/resources/CensusHeaderMissing.csv";
@@ -34,7 +31,7 @@ public class StateCensusAnalyserTest {
 	@Test
 	public void givenCsvPath_ShouldReturn_NumberOfRecords() {
 		try {
-			int numOfRecords = stateCensusAnalyser.loadIndiaCensusData(STATE_CENSUS_DATA);
+			int numOfRecords = stateCensusAnalyser.loadIndiaCensusData(CENSUS_DATA);
 			assertEquals(28, numOfRecords);
 		} catch (CensusAnalyserException e) {
 		}
@@ -52,7 +49,7 @@ public class StateCensusAnalyserTest {
 	@Test
 	public void givenRightCsvFile_ButWrongType_ShouldThrow_CustomException() {
 		try {
-			int numOfRecords = stateCensusAnalyser.loadIndiaCensusData(CSV_WRONG_DATA);
+			int numOfRecords = stateCensusAnalyser.loadIndiaCensusData(WRONG_CSV_DATA);
 		} catch (CensusAnalyserException e) {
 			assertEquals(CensusAnalyserException.ExceptionType.CSV_FILE_INTERNAL_ISSUES, e.type);
 		}
@@ -79,7 +76,7 @@ public class StateCensusAnalyserTest {
 	@Test
 	public void givenCsvPath_InStateCodeData_ShouldReturn_NumberOfRecords() {
 		try {
-			int numOfRecords = stateCensusAnalyser.loadIndianStateCode(STATE_CODE_DATA);
+			int numOfRecords = stateCensusAnalyser.loadIndianStateCode(CODE_DATA);
 			assertEquals(38, numOfRecords);
 		} catch (CensusAnalyserException e) {
 		}
@@ -97,7 +94,7 @@ public class StateCensusAnalyserTest {
 	@Test
 	public void givenRightStateCsvFile_ButWrongType_InStateCodeData_ShouldThrow_CustomException() {
 		try {
-			int numOfRecords = stateCensusAnalyser.loadIndiaCensusData(CSV_WRONG_DATA);
+			int numOfRecords = stateCensusAnalyser.loadIndiaCensusData(WRONG_CSV_DATA);
 		} catch (CensusAnalyserException e) {
 			assertEquals(CensusAnalyserException.ExceptionType.CSV_FILE_INTERNAL_ISSUES, e.type);
 		}
@@ -123,7 +120,7 @@ public class StateCensusAnalyserTest {
 
 	@Test
 	public void givenIndianCensusData_WhenSortedOnState_ShouldReturnSortedResult() throws CensusAnalyserException {
-		String sortedCensusData = stateCensusAnalyser.getStateWiseSortedCensusData(STATE_CENSUS_DATA);
+		String sortedCensusData = stateCensusAnalyser.getStateWiseSortedCensusData(CENSUS_DATA);
 		StateCensusData[] censusCSV = new Gson().fromJson(sortedCensusData, StateCensusData[].class);
 		assertEquals("Andhra Pradesh", censusCSV[0].getState());
 		assertEquals("West Bengal", censusCSV[censusCSV.length - 1].getState());
@@ -131,7 +128,7 @@ public class StateCensusAnalyserTest {
 
 	@Test
 	public void givenStateCodeData_WhenSortedOnStateCode_ShouldReturnSortedResult() throws CensusAnalyserException {
-		String sortedStateCodeData = stateCensusAnalyser.getStateCodeWiseSortedData(STATE_CODE_DATA);
+		String sortedStateCodeData = stateCensusAnalyser.getStateCodeWiseSortedData(CODE_DATA);
 		StateCodeData[] stateCodeCSV = new Gson().fromJson(sortedStateCodeData, StateCodeData[].class);
 		assertEquals("AN", stateCodeCSV[0].getStateCode());
 		assertEquals("WB", stateCodeCSV[stateCodeCSV.length - 1].getStateCode());
@@ -139,7 +136,7 @@ public class StateCensusAnalyserTest {
 
 	@Test
 	public void givenStateCodeData_WhenSortedOnPopulation_ShouldReturnSortedResult() throws CensusAnalyserException {
-		String sortedCensusData = stateCensusAnalyser.getPopulationWiseSortedCensusData(STATE_CENSUS_DATA);
+		String sortedCensusData = stateCensusAnalyser.getPopulationWiseSortedCensusData(CENSUS_DATA);
 		new Json().writeList("population", sortedCensusData);
 		String readCensuslist = new Json().readList("population.json");
 		StateCensusData[] censusCSV = new Gson().fromJson(sortedCensusData, StateCensusData[].class);
@@ -150,10 +147,19 @@ public class StateCensusAnalyserTest {
 	@Test
 	public void givenStateCodeData_WhenSortedOnPopulationDensity_ShouldReturnSortedResult()
 			throws CensusAnalyserException {
-		String sortedCensusData = stateCensusAnalyser.getPopulationDensityWiseSortedCensusData(STATE_CENSUS_DATA);
+		String sortedCensusData = stateCensusAnalyser.getPopulationDensityWiseSortedCensusData(CENSUS_DATA);
 		new Json().writeList("populationDensity", sortedCensusData);
 		StateCensusData[] censusCSV = new Gson().fromJson(sortedCensusData, StateCensusData[].class);
 		assertEquals("Bihar", censusCSV[0].getState());
 		assertEquals("Arunachal Pradesh", censusCSV[censusCSV.length - 1].getState());
+	}
+	
+	@Test
+	public void givenStateCodeData_WhenSortedOnArea_ShouldReturnSortedResult() throws CensusAnalyserException {
+		String sortedCensusData = stateCensusAnalyser.getAreaWiseSortedCensusData(CENSUS_DATA);
+		new Json().writeList("Area", sortedCensusData);
+		StateCensusData[] censusCSV = new Gson().fromJson(sortedCensusData, StateCensusData[].class);
+		assertEquals("Rajasthan", censusCSV[0].getState());
+		assertEquals("Goa", censusCSV[censusCSV.length - 1].getState());
 	}
 }

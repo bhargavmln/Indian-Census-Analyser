@@ -28,7 +28,7 @@ public class Json {
 		String jsonString = new String();
 		try {
 			Reader reader = Files.newBufferedReader(Paths.get(PATH + "\\" + fileName));
-			jsonString= new Gson().fromJson(reader, new TypeToken<String>() {
+			jsonString = new Gson().fromJson(reader, new TypeToken<String>() {
 			}.getType());
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -36,4 +36,3 @@ public class Json {
 		return jsonString;
 	}
 }
-

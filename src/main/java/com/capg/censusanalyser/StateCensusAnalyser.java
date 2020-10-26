@@ -48,13 +48,28 @@ public class StateCensusAnalyser {
 		String sortedStateList = new Gson().toJson(Arrays.asList(stateCensusData));
 		return sortedStateList;
 	}
-	
+
 	public String getPopulationDensityWiseSortedCensusData(String STATE_CENSUS_DATA) throws CensusAnalyserException {
 		List<StateCensusData> stateCensusList = new CSVStateCensus().loadIndiaCensusData(STATE_CENSUS_DATA);
 		List<StateCensusData> sortedStateCensusList = stateCensusList.stream()
-								.sorted(Comparator.comparing(StateCensusData::getDensityPerSqKm).reversed())
-								.collect(Collectors.toList());
+				.sorted(Comparator.comparing(StateCensusData::getDensityPerSqKm).reversed())
+				.collect(Collectors.toList());
 		String sortedStateList = new Gson().toJson(sortedStateCensusList);
 		return sortedStateList;
+	}
+
+	public String getAreaWiseSortedCensusData(String STATE_CENSUS_DATA) throws CensusAnalyserException {
+		List<StateCensusData> stateCensusList = new CSVStateCensus().loadIndiaCensusData(STATE_CENSUS_DATA);
+		List<StateCensusData> sortedStateCensusList = stateCensusList.stream()
+				.sorted(Comparator.comparing(StateCensusData::getAreaInSqKm).reversed()).collect(Collectors.toList());
+		return toJson(sortedStateCensusList);
+	}
+
+	public List<StateCensusData> loadIndianCensuaData(String PATH) throws CensusAnalyserException {
+		return new CSVStateCensus().loadIndiaCensusData(PATH);
+	}
+
+	public <E> String toJson(List<E> list) {
+		return new Gson().toJson(list);
 	}
 }
